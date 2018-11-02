@@ -26,7 +26,7 @@ endif
 test:
 	go test -v --cover ${PKG_NAME}
 	# Integration Tests
-	# go test -run Integration -v --cover ${PKG_NAME}/topic
-	# go test -run Integration -v --cover ${PKG_NAME}/story
+	go test -run Integration -v --cover ${PKG_NAME}/topic
+	go test -run Integration -v --cover ${PKG_NAME}/story
 	GOCACHE=off go test -run Integration -v --cover ${PKG_NAME}/cmd/server
 
