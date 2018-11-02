@@ -3,9 +3,9 @@ package topic
 import (
 	"database/sql"
 
+	"github.com/adhityaramadhanus/chronicle"
 	"github.com/adhityaramadhanus/chronicle/function"
 	"github.com/pkg/errors"
-	"gitlab.com/adhityaramadhanus/chronicle"
 )
 
 var (
@@ -17,7 +17,7 @@ var (
 type Service interface {
 	CreateTopic(topic chronicle.Topic) (createdTopic chronicle.Topic, err error)
 	UpdateTopic(topic chronicle.Topic) (updatedTopic chronicle.Topic, err error)
-	GetTopics(option chronicle.TopicPageOptions) (chronicle.Topics, int, error)
+	GetTopics(option chronicle.PagingOptions) (chronicle.Topics, int, error)
 	GetTopicByID(id int) (chronicle.Topic, error)
 	GetTopicBySlug(slug string) (chronicle.Topic, error)
 	DeleteTopicByID(id int) error
@@ -53,7 +53,7 @@ func (s *service) UpdateTopic(topic chronicle.Topic) (updatedTopic chronicle.Top
 	return s.topicRepository.Update(topic)
 }
 
-func (s *service) GetTopics(option chronicle.TopicPageOptions) (topics chronicle.Topics, topicsCount int, err error) {
+func (s *service) GetTopics(option chronicle.PagingOptions) (topics chronicle.Topics, topicsCount int, err error) {
 	defer func() {
 		if err != nil && err != ErrNoTopicFound {
 			err = errors.Wrap(err, function.GetFunctionName(s.GetTopics))
