@@ -167,7 +167,7 @@ func (s TopicRepository) Update(topic chronicle.Topic) (updatedTopic chronicle.T
 		}
 	}()
 
-	query := `UPDATE %s SET (
+	query := `UPDATE topics SET (
 							name,
 							slug,
 							updatedAt
