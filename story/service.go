@@ -2,7 +2,6 @@ package story
 
 import (
 	"database/sql"
-	"log"
 	"strconv"
 
 	"github.com/adhityaramadhanus/chronicle"
@@ -64,7 +63,6 @@ func (s *service) GetStories(filter chronicle.StoryFilterOptions, option chronic
 
 	// filter by status only
 	if filter.Status != "" && filter.Topic == "" {
-		log.Println("HERE", filter.Status)
 		return s.storyRepository.FindByStatus(filter.Status, option)
 	}
 
