@@ -40,8 +40,8 @@ func (s StoryRepository) Find(id int) (story chronicle.Story, err error) {
 							id,
 							title, 
 							slug, 
-							description, 
-							text,
+							excerpt, 
+							content,
 							reporter,
 							editor,
 							author,
@@ -83,8 +83,8 @@ func (s StoryRepository) FindBySlug(slug string) (story chronicle.Story, err err
 							id,
 							title, 
 							slug, 
-							description, 
-							text,
+							excerpt, 
+							content,
 							reporter,
 							editor,
 							author,
@@ -146,7 +146,7 @@ func (s StoryRepository) FindByStatus(status string, option chronicle.PagingOpti
 			id,
 			title, 
 			slug, 
-			description,
+			excerpt,
 			author,
 			status,
 			media, 
@@ -172,7 +172,7 @@ func (s StoryRepository) FindByStatus(status string, option chronicle.PagingOpti
 	}
 
 	// count topics for pagination
-	countQuery := `SELECT count(*) FROM %s WHERE status=$1`
+	countQuery := `SELECT count(*) FROM stories WHERE status=$1`
 	row := s.db.QueryRow(countQuery, status)
 	row.Scan(&storiesCount)
 
@@ -210,7 +210,7 @@ func (s StoryRepository) FindByTopicAndStatus(topic int, status string, option c
 			stories.id,
 			stories.title, 
 			stories.slug, 
-			stories.description,
+			stories.excerpt,
 			stories.author,
 			stories.status,
 			stories.media, 
@@ -274,7 +274,7 @@ func (s StoryRepository) All(option chronicle.PagingOptions) (stories chronicle.
 			id,
 			title, 
 			slug, 
-			description,
+			excerpt,
 			author,
 			status,
 			media, 
@@ -325,8 +325,8 @@ func (s StoryRepository) Insert(story chronicle.Story) (createdStory chronicle.S
 	query := `INSERT INTO stories (
 							title, 
 							slug, 
-							description, 
-							text,
+							excerpt, 
+							content,
 							reporter,
 							editor,
 							author,
@@ -337,8 +337,8 @@ func (s StoryRepository) Insert(story chronicle.Story) (createdStory chronicle.S
 						) VALUES (
 							:title, 
 							:slug, 
-							:description, 
-							:text,
+							:excerpt, 
+							:content,
 							:reporter,
 							:editor,
 							:author,
@@ -375,8 +375,8 @@ func (s StoryRepository) Update(story chronicle.Story) (createdStory chronicle.S
 	query := `UPDATE stories SET (
 							title, 
 							slug, 
-							description, 
-							text,
+							excerpt, 
+							content,
 							reporter,
 							editor,
 							author,
@@ -386,8 +386,8 @@ func (s StoryRepository) Update(story chronicle.Story) (createdStory chronicle.S
 						) = (
 							:title, 
 							:slug, 
-							:description, 
-							:text,
+							:excerpt, 
+							:content,
 							:reporter,
 							:editor,
 							:author,
