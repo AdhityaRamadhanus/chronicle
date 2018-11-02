@@ -16,17 +16,17 @@ var (
 
 //Story is domain entity
 type Story struct {
-	ID          int
-	Media       json.RawMessage
-	Title       string
-	Slug        string
-	Description string
-	Text        string
-	Reporter    string
-	Editor      string
-	Author      string
-	Status      string
-	Topics      Topics
+	ID       int
+	Media    json.RawMessage
+	Title    string
+	Slug     string
+	Excerpt  string
+	Content  string
+	Reporter string
+	Editor   string
+	Author   string
+	Status   string
+	Topics   Topics
 
 	// stats
 	Likes     int
