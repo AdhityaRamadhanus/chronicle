@@ -1,0 +1,10 @@
+database:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: bukalapak
+  dbname: chronicle
+  sslmode: disable
+
+jwt:
+  secret: bukalapak
