@@ -2,7 +2,7 @@ database:
   host: localhost
   port: 5432
   user: postgres
-  password: rootpw
+  password:
   dbname: chronicle
   sslmode: disable
 

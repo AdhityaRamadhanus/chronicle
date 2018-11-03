@@ -3,8 +3,6 @@ services:
   postgres:
     container_name: chronicle-postgres
     image: postgres:latest
-    environment:
-      - POSTGRES_PASSWORD=${PG_ROOT_PASSWORD}
     volumes:
       - ${PG_DATA_DIR}:/var/lib/postgresql/data
     ports:
