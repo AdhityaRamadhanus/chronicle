@@ -7,7 +7,10 @@ PKG_NAME = github.com/adhityaramadhanus/chronicle
 
 # target #
 
-default: test build
+default: unit-test integration-test build
+
+run:
+	go run cmd/server/main.go
 
 build: 
 	@echo "Setup chronicle"
@@ -23,9 +26,10 @@ endif
 
 # Test Packages
 
-test:
+unit-test:
 	go test -v --cover ${PKG_NAME}
-	# Integration Tests
+
+integration-test:
 	go test -run Integration -v --cover ${PKG_NAME}/topic
 	go test -run Integration -v --cover ${PKG_NAME}/story
 	GOCACHE=off go test -run Integration -v --cover ${PKG_NAME}/cmd/server
