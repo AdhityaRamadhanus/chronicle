@@ -76,6 +76,12 @@
 			"revisionTime": "2018-10-25T06:51:40Z"
 		},
 		{
+			"checksumSHA1": "yNyE9MrpDJQAxOxSipSIBgBhuNQ=",
+			"path": "github.com/google/uuid",
+			"revision": "9b3b1e0f5f99ae461456d768e7d301a7acdaa2d8",
+			"revisionTime": "2018-09-17T14:00:05Z"
+		},
+		{
 			"checksumSHA1": "5NQxGXStdEEDvT6IPRtJk7Qg+GQ=",
 			"path": "github.com/gorilla/mux",
 			"revision": "521ea7b17d02faf8d3afea6737573942ceac59c5",
