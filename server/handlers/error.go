@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/adhityaramadhanus/chronicle/server/render"
+	"github.com/AdhityaRamadhanus/chronicle/server/render"
 )
 
 var (

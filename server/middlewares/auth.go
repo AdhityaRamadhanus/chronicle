@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/adhityaramadhanus/chronicle/server/internal/contextkey"
-	"github.com/adhityaramadhanus/chronicle/server/render"
+	"github.com/AdhityaRamadhanus/chronicle/server/internal/contextkey"
+	"github.com/AdhityaRamadhanus/chronicle/server/render"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/spf13/viper"
 )

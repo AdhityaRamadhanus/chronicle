@@ -1,11 +1,11 @@
-package script
+package main
 
 import (
 	"log"
 	"os"
 	"time"
 
-	"github.com/adhityaramadhanus/chronicle/config"
+	"github.com/AdhityaRamadhanus/chronicle/config"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"

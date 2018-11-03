@@ -7,7 +7,7 @@ import (
 	"path"
 	"sort"
 
-	"github.com/adhityaramadhanus/chronicle/config"
+	"github.com/AdhityaRamadhanus/chronicle/config"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"

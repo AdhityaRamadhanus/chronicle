@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"strconv"
 
-	"github.com/adhityaramadhanus/chronicle"
-	"github.com/adhityaramadhanus/chronicle/function"
+	"github.com/AdhityaRamadhanus/chronicle"
+	"github.com/AdhityaRamadhanus/chronicle/function"
 	"github.com/pkg/errors"
 )
 

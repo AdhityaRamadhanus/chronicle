@@ -8,8 +8,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
-	chronicle "github.com/adhityaramadhanus/chronicle"
-	function "github.com/adhityaramadhanus/chronicle/function"
+	chronicle "github.com/AdhityaRamadhanus/chronicle"
+	function "github.com/AdhityaRamadhanus/chronicle/function"
 )
 
 /*

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"github.com/adhityaramadhanus/chronicle/server/render"
+	"github.com/AdhityaRamadhanus/chronicle/server/render"
 	log "github.com/sirupsen/logrus"
 )
 
