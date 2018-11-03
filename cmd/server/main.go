@@ -10,8 +10,10 @@ import (
 	"github.com/adhityaramadhanus/chronicle/server"
 	"github.com/adhityaramadhanus/chronicle/server/handlers"
 	"github.com/adhityaramadhanus/chronicle/storage/postgre"
+	_redis "github.com/adhityaramadhanus/chronicle/storage/redis"
 	"github.com/adhityaramadhanus/chronicle/story"
 	"github.com/adhityaramadhanus/chronicle/topic"
+	"github.com/go-redis/redis"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -70,8 +72,20 @@ func main() {
 	log.WithFields(log.Fields{
 		"database": "postgres",
 		"host":     viper.GetString("database.host"),
-		"port":     viper.GetString("port"),
+		"port":     viper.GetString("database.port"),
 	}).Info("Connected to postgres")
+
+	// Redis
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", viper.GetString("redis.host"), viper.GetString("redis.port")),
+		Password: viper.GetString("redis.password"), // no password set
+		DB:       viper.GetInt("redis.db"),          // use default DB
+	})
+
+	_, err = redisClient.Ping().Result()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Repositories
 	storyRepository := postgre.NewStoryRepository(db, "stories")
@@ -79,12 +93,15 @@ func main() {
 
 	storyService := story.NewService(storyRepository)
 	topicService := topic.NewService(topicRepository)
+	cacheService := _redis.NewCacheService(redisClient)
 
 	storyHandler := handlers.StoryHandler{
 		StoryService: storyService,
+		CacheService: cacheService,
 	}
 	topicHandler := handlers.TopicHandler{
 		TopicService: topicService,
+		CacheService: cacheService,
 	}
 	handlers := []server.Handler{
 		storyHandler,

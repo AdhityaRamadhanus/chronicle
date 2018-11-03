@@ -169,6 +169,7 @@ func TestMain(m *testing.M) {
 	}
 	server = cs.NewServer(handlers).CreateHttpServer()
 
+	os.Setenv("cache_response", "false")
 	code := m.Run()
 	os.Exit(code)
 }
