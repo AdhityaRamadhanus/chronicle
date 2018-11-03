@@ -1,0 +1,16 @@
+before_script:
+  - sleep 5
+  - psql -c 'create database chronicle-test;' -U postgres
+  - go run script/run_migration/main.go
+language: go
+go:
+  - 1.11.x
+env:
+  - ENV=Testing
+services:
+  - postgresql
+  - redis-server
+branches:
+  only:
+  - master
+sudo: required
