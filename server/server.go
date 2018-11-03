@@ -38,7 +38,11 @@ func NewServer(Handlers []Handler) *Server {
 
 func (s *Server) CreateHttpServer() *http.Server {
 	srv := &http.Server{
-		Handler:      cors.Default().Handler(middlewares.HTTPReqLogger(s.Router)),
+		Handler: middlewares.PanicHandler(
+			cors.Default().Handler(
+				middlewares.HTTPReqLogger(s.Router),
+			),
+		),
 		Addr:         s.Addr,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  5 * time.Second,
