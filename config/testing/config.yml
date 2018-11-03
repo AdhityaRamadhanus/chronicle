@@ -6,6 +6,9 @@ database:
   dbname: chronicle-test
   sslmode: disable
 
+jwt_secret: ahay
+cache_response: true
+
 redis:
   host: localhost
   port: 6379

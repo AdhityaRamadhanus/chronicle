@@ -11,5 +11,6 @@ redis:
   port: 6379
   password:
   db:
-    
+  
+jwt_secret: ahay
 cache_response: true
