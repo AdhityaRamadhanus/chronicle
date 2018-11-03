@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/adhityaramadhanus/chronicle"
+	"github.com/adhityaramadhanus/chronicle/server/internal/contextkey"
 	"github.com/adhityaramadhanus/chronicle/server/middlewares"
 	"github.com/adhityaramadhanus/chronicle/server/render"
 	"github.com/adhityaramadhanus/chronicle/story"
@@ -23,16 +24,17 @@ type StoryHandler struct {
 }
 
 func (h StoryHandler) RegisterRoutes(router *mux.Router) {
+	authMiddleware := middlewares.Authenticate
 	cacheMiddleware := middlewares.Cache(h.CacheService)
 
-	router.HandleFunc("/stories/", cacheMiddleware("60s", h.getStories)).Methods("GET")
-	router.HandleFunc("/stories/insert", h.createStory).Methods("POST")
+	router.HandleFunc("/stories/", authMiddleware(cacheMiddleware("60s", h.getStories))).Methods("GET")
+	router.HandleFunc("/stories/insert", authMiddleware(h.createStory)).Methods("POST")
 
-	router.HandleFunc("/stories/{id:[0-9]+}", cacheMiddleware("60s", h.getStoryByID)).Methods("GET")
-	router.HandleFunc("/stories/{id:[0-9]+}/update", h.updateStory).Methods("PATCH")
-	router.HandleFunc("/stories/{id:[0-9]+}/delete", h.deleteStoryByID).Methods("DELETE")
+	router.HandleFunc("/stories/{id:[0-9]+}", authMiddleware(cacheMiddleware("60s", h.getStoryByID))).Methods("GET")
+	router.HandleFunc("/stories/{id:[0-9]+}/update", authMiddleware(h.updateStory)).Methods("PATCH")
+	router.HandleFunc("/stories/{id:[0-9]+}/delete", authMiddleware(h.deleteStoryByID)).Methods("DELETE")
 
-	router.HandleFunc("/stories/{slug}", cacheMiddleware("60s", h.getStoryBySlug)).Methods("GET")
+	router.HandleFunc("/stories/{slug}", authMiddleware(cacheMiddleware("60s", h.getStoryBySlug))).Methods("GET")
 }
 
 func (h *StoryHandler) getStories(res http.ResponseWriter, req *http.Request) {
@@ -93,7 +95,11 @@ func (h *StoryHandler) getStories(res http.ResponseWriter, req *http.Request) {
 	)
 
 	if err != nil {
-		log.WithError(err).Error("Error Handler Getting Stories")
+		log.WithFields(log.Fields{
+			"request-body": getStoriesRequest,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+		}).WithError(err).Error("Error Handler Getting Stories")
+
 		RenderError(res, ErrSomethingWrong)
 		return
 	}

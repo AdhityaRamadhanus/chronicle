@@ -23,17 +23,18 @@ type TopicHandler struct {
 }
 
 func (h TopicHandler) RegisterRoutes(router *mux.Router) {
+	authMiddleware := middlewares.Authenticate
 	cacheMiddleware := middlewares.Cache(h.CacheService)
 
 	// bug in gorilla mux, subrouter methods
-	router.HandleFunc("/topics/", cacheMiddleware("60s", h.getTopics)).Methods("GET")
-	router.HandleFunc("/topics/insert", h.createTopic).Methods("POST")
+	router.HandleFunc("/topics/", authMiddleware(cacheMiddleware("60s", h.getTopics))).Methods("GET")
+	router.HandleFunc("/topics/insert", authMiddleware(h.createTopic)).Methods("POST")
 
-	router.HandleFunc("/topics/{id:[0-9]+}", cacheMiddleware("60s", h.getTopicByID)).Methods("GET")
-	router.HandleFunc("/topics/{id:[0-9]+}/update", h.updateTopic).Methods("PATCH")
-	router.HandleFunc("/topics/{id:[0-9]+}/delete", h.deleteTopicByID).Methods("DELETE")
+	router.HandleFunc("/topics/{id:[0-9]+}", authMiddleware(cacheMiddleware("60s", h.getTopicByID))).Methods("GET")
+	router.HandleFunc("/topics/{id:[0-9]+}/update", authMiddleware(h.updateTopic)).Methods("PATCH")
+	router.HandleFunc("/topics/{id:[0-9]+}/delete", authMiddleware(h.deleteTopicByID)).Methods("DELETE")
 
-	router.HandleFunc("/topics/{slug}", cacheMiddleware("60s", h.getTopicBySlug)).Methods("GET")
+	router.HandleFunc("/topics/{slug}", authMiddleware(cacheMiddleware("60s", h.getTopicBySlug))).Methods("GET")
 }
 
 func (h *TopicHandler) getTopics(res http.ResponseWriter, req *http.Request) {

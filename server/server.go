@@ -40,7 +40,7 @@ func (s *Server) CreateHttpServer() *http.Server {
 	srv := &http.Server{
 		Handler: middlewares.PanicHandler(
 			cors.Default().Handler(
-				middlewares.HTTPReqLogger(s.Router),
+				middlewares.LogRequest(s.Router),
 			),
 		),
 		Addr:         s.Addr,
