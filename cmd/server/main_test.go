@@ -8,14 +8,18 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/adhityaramadhanus/chronicle"
 	"github.com/adhityaramadhanus/chronicle/config"
 	cs "github.com/adhityaramadhanus/chronicle/server"
 	"github.com/adhityaramadhanus/chronicle/server/handlers"
 	"github.com/adhityaramadhanus/chronicle/storage/postgre"
+	_redis "github.com/adhityaramadhanus/chronicle/storage/redis"
 	"github.com/adhityaramadhanus/chronicle/story"
 	"github.com/adhityaramadhanus/chronicle/topic"
+	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/go-redis/redis"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
@@ -64,8 +68,8 @@ type (
 )
 
 var (
-	server *http.Server
-
+	server      *http.Server
+	accessToken string
 	// cross test variable
 	topicId int
 	storyId int
@@ -102,6 +106,7 @@ func createHttpJSONRequest(method string, path string, requestBody interface{}) 
 		httpReq = req
 	}
 
+	httpReq.Header.Set("Authorization", "Bearer "+accessToken)
 	return httpReq, nil
 }
 
@@ -150,26 +155,48 @@ func TestMain(m *testing.M) {
 
 	setupDatabase(db)
 
+	// Redis
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", viper.GetString("redis.host"), viper.GetString("redis.port")),
+		Password: viper.GetString("redis.password"), // no password set
+		DB:       viper.GetInt("redis.db"),          // use default DB
+	})
+
 	// Repositories
 	storyRepository := postgre.NewStoryRepository(db, "stories")
 	topicRepository := postgre.NewTopicRepository(db, "topics")
 
 	storyService := story.NewService(storyRepository)
 	topicService := topic.NewService(topicRepository)
+	cacheService := _redis.NewCacheService(redisClient)
 
 	storyHandler := handlers.StoryHandler{
 		StoryService: storyService,
+		CacheService: cacheService,
 	}
 	topicHandler := handlers.TopicHandler{
 		TopicService: topicService,
+		CacheService: cacheService,
 	}
+
 	handlers := []cs.Handler{
 		storyHandler,
 		topicHandler,
 	}
 	server = cs.NewServer(handlers).CreateHttpServer()
 
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"client":    "chronicle-test",
+		"timestamp": time.Now(),
+	})
+	tokenString, err := jwtToken.SignedString([]byte(viper.GetString("jwt_secret")))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	accessToken = tokenString
 	os.Setenv("cache_response", "false")
+
 	code := m.Run()
 	os.Exit(code)
 }
