@@ -1,0 +1,16 @@
+version: '3'
+services:
+  postgres:
+    container_name: chronicle-postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=${PG_ROOT_PASSWORD}
+    volumes:
+      - ${PG_DATA_DIR}:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  redis:
+    container_name: chronicle-redis
+    image: redis:alpine
+    ports:
+      - 6379:6379
