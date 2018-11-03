@@ -9,13 +9,17 @@ import (
 )
 
 var (
-	// request body processing error
+	//ErrFailedToUnmarshalJSON request body processing error
 	ErrFailedToUnmarshalJSON = errors.New("Failed to Unmarshal JSON")
-	ErrFailedToReadBody      = errors.New("Failed to read request body")
-	ErrSomethingWrong        = errors.New("Something is wrong")
-	ErrInvalidRequest        = errors.New("Invalid Request Against this endpoint")
+	//ErrFailedToReadBody request body processing error
+	ErrFailedToReadBody = errors.New("Failed to read request body")
+	//ErrSomethingWrong request body processing error
+	ErrSomethingWrong = errors.New("Something is wrong")
+	//ErrInvalidRequest request body processing error
+	ErrInvalidRequest = errors.New("Invalid Request Against this endpoint")
 )
 
+//RenderError help handler create a consistent error response
 func RenderError(res http.ResponseWriter, err error, customMessages ...string) error {
 	errorMessage := err.Error()
 	if len(customMessages) > 0 {

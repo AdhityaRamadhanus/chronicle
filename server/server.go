@@ -11,6 +11,7 @@ import (
 	"github.com/rs/cors"
 )
 
+//Server hold mux Router and information of host port and address of our app
 type Server struct {
 	Router *mux.Router
 	Addr   string
@@ -18,6 +19,7 @@ type Server struct {
 	Port   string
 }
 
+//NewServer create Server from Handler
 func NewServer(Handlers []Handler) *Server {
 	router := mux.NewRouter().
 		StrictSlash(true).
@@ -36,6 +38,7 @@ func NewServer(Handlers []Handler) *Server {
 	}
 }
 
+//CreateHttpServer will return http.Server for flexible use like testing
 func (s *Server) CreateHttpServer() *http.Server {
 	srv := &http.Server{
 		Handler: middlewares.PanicHandler(

@@ -70,6 +70,7 @@ func buildCacheKeyFromURI(req *http.Request) string {
 	return strings.Join(cacheKeyParts, ":")
 }
 
+//Cache http request
 func Cache(cacheService chronicle.CacheService) func(string, http.HandlerFunc) http.HandlerFunc {
 	return func(duration string, next http.HandlerFunc) http.HandlerFunc {
 		return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {

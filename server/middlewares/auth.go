@@ -24,6 +24,7 @@ func parseAuthorizationHeader(authHeader, scheme string) (cred string, err error
 	return splittedHeader[1], nil
 }
 
+//Authenticate request
 func Authenticate(nextHandler http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		authHeader, ok := req.Header["Authorization"]
@@ -67,7 +68,7 @@ func Authenticate(nextHandler http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		claims, ok := token.Claims.(jwt.MapClaims)
+		claims, _ := token.Claims.(jwt.MapClaims)
 		req = req.WithContext(context.WithValue(req.Context(), contextkey.ClientID, claims["client"].(string)))
 		nextHandler(res, req)
 	})
