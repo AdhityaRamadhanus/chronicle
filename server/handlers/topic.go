@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/adhityaramadhanus/chronicle"
+	"github.com/adhityaramadhanus/chronicle/server/middlewares"
 	"github.com/adhityaramadhanus/chronicle/server/render"
 	topic "github.com/adhityaramadhanus/chronicle/topic"
 	"github.com/asaskevich/govalidator"
@@ -18,18 +19,21 @@ import (
 
 type TopicHandler struct {
 	TopicService topic.Service
+	CacheService chronicle.CacheService
 }
 
 func (h TopicHandler) RegisterRoutes(router *mux.Router) {
+	cacheMiddleware := middlewares.Cache(h.CacheService)
+
 	// bug in gorilla mux, subrouter methods
-	router.HandleFunc("/topics/", h.getTopics).Methods("GET")
+	router.HandleFunc("/topics/", cacheMiddleware("60s", h.getTopics)).Methods("GET")
 	router.HandleFunc("/topics/insert", h.createTopic).Methods("POST")
 
-	router.HandleFunc("/topics/{id:[0-9]+}", h.getTopicByID).Methods("GET")
+	router.HandleFunc("/topics/{id:[0-9]+}", cacheMiddleware("60s", h.getTopicByID)).Methods("GET")
 	router.HandleFunc("/topics/{id:[0-9]+}/update", h.updateTopic).Methods("PATCH")
 	router.HandleFunc("/topics/{id:[0-9]+}/delete", h.deleteTopicByID).Methods("DELETE")
 
-	router.HandleFunc("/topics/{slug}", h.getTopicBySlug).Methods("GET")
+	router.HandleFunc("/topics/{slug}", cacheMiddleware("60s", h.getTopicBySlug)).Methods("GET")
 }
 
 func (h *TopicHandler) getTopics(res http.ResponseWriter, req *http.Request) {

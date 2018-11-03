@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/adhityaramadhanus/chronicle"
+	"github.com/adhityaramadhanus/chronicle/server/middlewares"
 	"github.com/adhityaramadhanus/chronicle/server/render"
 	"github.com/adhityaramadhanus/chronicle/story"
 	"github.com/asaskevich/govalidator"
@@ -18,17 +19,20 @@ import (
 
 type StoryHandler struct {
 	StoryService story.Service
+	CacheService chronicle.CacheService
 }
 
 func (h StoryHandler) RegisterRoutes(router *mux.Router) {
-	router.HandleFunc("/stories/", h.getStories).Methods("GET")
+	cacheMiddleware := middlewares.Cache(h.CacheService)
+
+	router.HandleFunc("/stories/", cacheMiddleware("60s", h.getStories)).Methods("GET")
 	router.HandleFunc("/stories/insert", h.createStory).Methods("POST")
 
-	router.HandleFunc("/stories/{id:[0-9]+}", h.getStoryByID).Methods("GET")
+	router.HandleFunc("/stories/{id:[0-9]+}", cacheMiddleware("60s", h.getStoryByID)).Methods("GET")
 	router.HandleFunc("/stories/{id:[0-9]+}/update", h.updateStory).Methods("PATCH")
 	router.HandleFunc("/stories/{id:[0-9]+}/delete", h.deleteStoryByID).Methods("DELETE")
 
-	router.HandleFunc("/stories/{slug}", h.getStoryBySlug).Methods("GET")
+	router.HandleFunc("/stories/{slug}", cacheMiddleware("60s", h.getStoryBySlug)).Methods("GET")
 }
 
 func (h *StoryHandler) getStories(res http.ResponseWriter, req *http.Request) {
