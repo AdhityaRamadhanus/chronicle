@@ -96,8 +96,9 @@ func (h *StoryHandler) getStories(res http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		log.WithFields(log.Fields{
-			"request-body": getStoriesRequest,
+			"request":      getStoriesRequest,
 			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
 		}).WithError(err).Error("Error Handler Getting Stories")
 
 		RenderError(res, ErrSomethingWrong)
@@ -172,7 +173,12 @@ func (h *StoryHandler) createStory(res http.ResponseWriter, req *http.Request) {
 
 	createdStory, err := h.StoryService.CreateStory(newStory)
 	if err != nil {
-		log.WithError(err).Error("Error Handler Creating Story")
+		log.WithFields(log.Fields{
+			"request":      createStoryRequest,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Creating Stories")
+
 		RenderError(res, ErrSomethingWrong)
 		return
 	}
@@ -268,7 +274,11 @@ func (h *StoryHandler) updateStory(res http.ResponseWriter, req *http.Request) {
 
 	updatedStory, err := h.StoryService.UpdateStory(foundStory)
 	if err != nil {
-		log.WithError(err).Error("Error Handler Updating Story")
+		log.WithFields(log.Fields{
+			"request":      updateStoryRequest,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Updating Story")
 		RenderError(res, ErrSomethingWrong)
 		return
 	}
@@ -296,7 +306,11 @@ func (h *StoryHandler) getStoryByID(res http.ResponseWriter, req *http.Request) 
 	}
 
 	if err != nil {
-		log.WithError(err).Error("Error Handler Get Story By ID")
+		log.WithFields(log.Fields{
+			"request":      storyId,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Get Story By ID")
 		RenderError(res, ErrSomethingWrong)
 		return
 	}
@@ -313,7 +327,11 @@ func (h *StoryHandler) deleteStoryByID(res http.ResponseWriter, req *http.Reques
 	err := h.StoryService.DeleteStoryByID(storyId)
 
 	if err != nil {
-		log.WithError(err).Error("Error Handler Delete Story by ID")
+		log.WithFields(log.Fields{
+			"request":      storyId,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Delete Story by ID")
 		RenderError(res, ErrSomethingWrong)
 		return
 	}
@@ -341,7 +359,11 @@ func (h *StoryHandler) getStoryBySlug(res http.ResponseWriter, req *http.Request
 	}
 
 	if err != nil {
-		log.WithError(err).Error("Error Handler Get Story By Slug")
+		log.WithFields(log.Fields{
+			"request":      slug,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Get Story By Slug")
 		RenderError(res, ErrSomethingWrong)
 		return
 	}

@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/AdhityaRamadhanus/chronicle"
+	"github.com/AdhityaRamadhanus/chronicle/server/internal/contextkey"
 	"github.com/AdhityaRamadhanus/chronicle/server/middlewares"
 	"github.com/AdhityaRamadhanus/chronicle/server/render"
 	topic "github.com/AdhityaRamadhanus/chronicle/topic"
@@ -75,7 +76,11 @@ func (h *TopicHandler) getTopics(res http.ResponseWriter, req *http.Request) {
 	})
 
 	if err != nil {
-		log.WithError(err).Error("Error Handler Getting Topics")
+		log.WithFields(log.Fields{
+			"request":      getTopicsRequest,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Getting Topics")
 		RenderError(res, ErrSomethingWrong)
 		return
 	}
@@ -128,7 +133,11 @@ func (h *TopicHandler) createTopic(res http.ResponseWriter, req *http.Request) {
 
 	createdTopic, err := h.TopicService.CreateTopic(newTopic)
 	if err != nil {
-		log.WithError(err).Error("Error Handler Creating Topic")
+		log.WithFields(log.Fields{
+			"request":      createTopicRequest,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Creating Topic")
 		RenderError(res, ErrSomethingWrong)
 		return
 	}
@@ -156,7 +165,11 @@ func (h *TopicHandler) getTopicByID(res http.ResponseWriter, req *http.Request) 
 	}
 
 	if err != nil {
-		log.WithError(err).Error("Error Handler Getting Topic By ID")
+		log.WithFields(log.Fields{
+			"request":      topicId,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Getting Topic By ID")
 		RenderError(res, ErrSomethingWrong)
 		return
 	}
@@ -215,7 +228,11 @@ func (h *TopicHandler) updateTopic(res http.ResponseWriter, req *http.Request) {
 
 	updatedTopic, err := h.TopicService.UpdateTopic(oldTopic)
 	if err != nil {
-		log.WithError(err).Error("Error Handler Updating Topic")
+		log.WithFields(log.Fields{
+			"request":      updateTopicRequest,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Updating Topic")
 		RenderError(res, ErrSomethingWrong)
 		return
 	}
@@ -232,7 +249,11 @@ func (h *TopicHandler) deleteTopicByID(res http.ResponseWriter, req *http.Reques
 	err := h.TopicService.DeleteTopicByID(topicId)
 
 	if err != nil {
-		log.WithError(err).Error("Error Handler Delete Topic By ID")
+		log.WithFields(log.Fields{
+			"request":      topicId,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Delete Topic By ID")
 		RenderError(res, ErrSomethingWrong)
 		return
 	}
@@ -260,7 +281,11 @@ func (h *TopicHandler) getTopicBySlug(res http.ResponseWriter, req *http.Request
 	}
 
 	if err != nil {
-		log.WithError(err).Error("Error Handler Getting Topic By Slug")
+		log.WithFields(log.Fields{
+			"request":      slug,
+			"client":       req.Context().Value(contextkey.ClientID).(string),
+			"x-request-id": req.Header.Get("X-Request-ID"),
+		}).WithError(err).Error("Error Handler Getting Topic By Slug")
 		RenderError(res, ErrSomethingWrong)
 		return
 	}
