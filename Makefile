@@ -34,3 +34,8 @@ integration-test:
 	go test -run Integration -v --cover ${PKG_NAME}/story
 	GOCACHE=off go test -run Integration -v --cover ${PKG_NAME}/cmd/server
 
+generate-token:
+	go run script/generate_access_token/main.go
+
+migration:
+	go run script/run_migration/main.go
