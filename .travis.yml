@@ -6,7 +6,7 @@ language: go
 go:
   - 1.11.x
 env:
-  - ENV=Testing
+  - ENV=testing
 services:
   - postgresql
   - redis-server

@@ -17,6 +17,7 @@ import (
 
 func init() {
 	godotenv.Load()
+	log.Info("Environment", os.Getenv("ENV"))
 	config.Init(os.Getenv("ENV"), []string{})
 }
 
