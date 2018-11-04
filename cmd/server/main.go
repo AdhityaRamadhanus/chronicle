@@ -127,6 +127,6 @@ func main() {
 		srv.Close()
 	}()
 
-	log.WithField("URL", server.Addr).Info("Chronicle API Server is running")
+	log.WithField("Port", server.Port).Info("Chronicle API Server is running")
 	log.Fatal(srv.ListenAndServe())
 }
