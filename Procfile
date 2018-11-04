@@ -1,1 +1,1 @@
-web: chronicle
+web: server
