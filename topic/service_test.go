@@ -1,7 +1,6 @@
 package topic_test
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
@@ -14,7 +13,6 @@ import (
 	"github.com/AdhityaRamadhanus/chronicle/storage/postgre"
 	"github.com/AdhityaRamadhanus/chronicle/topic"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -50,20 +48,7 @@ func TestMain(m *testing.M) {
 		log.Fatal(err)
 	}
 
-	pgConnString := fmt.Sprintf(
-		`host=%s 
-		port=%d 
-		user=%s 
-		password=%s 
-		dbname=%s 
-		sslmode=%s`,
-		viper.GetString("database.host"),
-		viper.GetInt("database.port"),
-		viper.GetString("database.user"),
-		viper.GetString("database.password"),
-		viper.GetString("database.dbname"),
-		viper.GetString("database.sslmode"),
-	)
+	pgConnString := postgre.GetConnString()
 
 	db, err := sqlx.Open("postgres", pgConnString)
 	if err != nil {

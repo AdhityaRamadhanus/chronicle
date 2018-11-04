@@ -133,20 +133,7 @@ func TestMain(m *testing.M) {
 		log.Fatal(err)
 	}
 
-	pgConnString := fmt.Sprintf(
-		`host=%s 
-		port=%d 
-		user=%s 
-		password=%s 
-		dbname=%s 
-		sslmode=%s`,
-		viper.GetString("database.host"),
-		viper.GetInt("database.port"),
-		viper.GetString("database.user"),
-		viper.GetString("database.password"),
-		viper.GetString("database.dbname"),
-		viper.GetString("database.sslmode"),
-	)
+	pgConnString := postgre.GetConnString()
 
 	db, err := sqlx.Open("postgres", pgConnString)
 	if err != nil {
