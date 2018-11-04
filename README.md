@@ -8,6 +8,10 @@ Entities:
 Topics
 Stories
 
+Database: postgres
+cache-server: redis
+
+Authentication: JWS
 <p>
   <a href="#installation-for-development">Installation |</a>
   <a href="#Usage">Usage |</a>
@@ -24,11 +28,11 @@ Installation (For Development)
 ----------- 
 * git clone
 * set environt variables in .env (example below)
+* change config if necessary in config/development/config.yml
 ```
 ENV=development
 
-CHRONICLE_HOST=
-CHRONICLE_PORT=8000
+PORT=8000
 
 PG_DATA_DIR=/home/path/to/your/postgresql-container-data
 
@@ -43,13 +47,6 @@ PRODUCTION_REDIS.HOST=
 PRODUCTION_REDIS.PORT=
 PRODUCTION_REDIS.PASSWORD=
 PRODUCTION_REDIS.DB=
-
-PRODUCTION_DATABASE.HOST=
-PRODUCTION_DATABASE.PORT=
-PRODUCTION_DATABASE.USER=
-PRODUCTION_DATABASE.PASSWORD=
-PRODUCTION_DATABASE.DBNAME=
-PRODUCTION_DATABASE.SSLMODE=
 ```
 * docker-compose up
 * create database "chronicle" on postgres
@@ -62,6 +59,8 @@ make migration
 ```bash
 make
 ```
+* run chronicle
+
 Usage
 -----
 * You will need access token to use the api
