@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -14,8 +13,6 @@ import (
 //Server hold mux Router and information of host port and address of our app
 type Server struct {
 	Router *mux.Router
-	Addr   string
-	Host   string
 	Port   string
 }
 
@@ -32,9 +29,7 @@ func NewServer(Handlers []Handler) *Server {
 
 	return &Server{
 		Router: router,
-		Host:   os.Getenv("CHRONICLE_HOST"),
-		Port:   os.Getenv("CHRONICLE_PORT"),
-		Addr:   fmt.Sprintf("%s:%s", os.Getenv("CHRONICLE_HOST"), os.Getenv("CHRONICLE_PORT")),
+		Port:   os.Getenv("PORT"),
 	}
 }
 
@@ -50,7 +45,7 @@ func (s *Server) CreateHttpServer() *http.Server {
 				),
 			),
 		),
-		Addr:         s.Addr,
+		Addr:         ":" + os.Getenv("PORT"),
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  5 * time.Second,
 	}

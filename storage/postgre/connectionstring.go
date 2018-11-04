@@ -10,7 +10,7 @@ import (
 func GetConnString() string {
 	if os.Getenv("ENV") == "production" {
 		//heroku specific
-		return os.Getenv("DATABSE_URL")
+		return os.Getenv("DATABASE_URL")
 	}
 
 	return fmt.Sprintf(`
