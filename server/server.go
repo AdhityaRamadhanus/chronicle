@@ -41,9 +41,9 @@ func NewServer(Handlers []Handler) *Server {
 //CreateHttpServer will return http.Server for flexible use like testing
 func (s *Server) CreateHttpServer() *http.Server {
 	srv := &http.Server{
-		Handler: middlewares.Gzip(
-			middlewares.TraceRequest(
-				middlewares.PanicHandler(
+		Handler: middlewares.PanicHandler(
+			middlewares.Gzip(
+				middlewares.TraceRequest(
 					cors.Default().Handler(
 						middlewares.LogRequest(s.Router),
 					),
