@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -17,17 +18,28 @@ func main() {
 	config.Init(os.Getenv("ENV"), []string{})
 
 	clientName := flag.String("client", "chronicle-app", "client name")
+	expiration := flag.String("exp", "24h", "client name")
 	flag.Parse()
-	if (*clientName) == "" {
-		log.Println("Please input client name")
+
+	nowInSeconds := time.Now().Unix()
+
+	claims := jwt.MapClaims{
+		"iss":    "chronicle-api",
+		"aud":    *clientName,
+		"sub":    fmt.Sprintf("chronicle-access-token|%s|%d", *clientName, nowInSeconds),
+		"iat":    nowInSeconds,
+		"client": *clientName,
+	}
+
+	var exp time.Duration
+	exp, err := time.ParseDuration(*expiration)
+	if err == nil {
+		claims["exp"] = nowInSeconds + int64(exp.Seconds())
 	}
 
 	log.Println("Generating access token for ", *clientName)
 
-	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"client":    *clientName,
-		"timestamp": time.Now(),
-	})
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := jwtToken.SignedString([]byte(viper.GetString("jwt_secret")))
 	if err != nil {
 		log.Fatal(err)
