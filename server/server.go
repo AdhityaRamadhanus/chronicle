@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -46,7 +45,7 @@ func (s *Server) CreateHttpServer() *http.Server {
 				),
 			),
 		),
-		Addr:         fmt.Sprintf(":%d", os.Getenv("PORT")),
+		Addr:         ":" + os.Getenv("PORT"),
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  5 * time.Second,
 	}
