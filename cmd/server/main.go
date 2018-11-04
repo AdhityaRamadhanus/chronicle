@@ -70,10 +70,11 @@ func main() {
 	}
 
 	log.WithFields(log.Fields{
-		"database": "postgres",
-		"host":     viper.GetString("database.host"),
-		"port":     viper.GetString("database.port"),
-	}).Info("Connected to postgres")
+		"database":      "postgres",
+		"database-name": viper.GetString("database.dbname"),
+		"host":          viper.GetString("database.host"),
+		"port":          viper.GetString("database.port"),
+	}).Info("Connected to database")
 
 	// Redis
 	redisClient := redis.NewClient(&redis.Options{
@@ -82,9 +83,16 @@ func main() {
 		DB:       viper.GetInt("redis.db"),          // use default DB
 	})
 
+	log.WithFields(log.Fields{
+		"cache-server": "redis",
+		"host":         viper.GetString("redis.host"),
+		"port":         viper.GetString("redis.port"),
+	}).Info("Connected to cache-server")
+
 	_, err = redisClient.Ping().Result()
 	if err != nil {
-		log.Fatal(err)
+		os.Setenv("cache_response", "false")
+		log.WithError(err).Error("Failed to connect to redis, caching response is disabled")
 	}
 
 	// Repositories
